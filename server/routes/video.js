@@ -59,10 +59,21 @@ router.post('/upload', verifyToken, upload.single('video'), async (req, res) => 
   }
 });
 
-// GET Route 
 router.get('/', verifyToken, async (req, res) => {
   try {
-    const videos = await Video.find({ uploader: req.user.id }).sort({ uploadDate: -1 });
+    const { search, sortBy } = req.query;
+
+    let query = { uploader: req.user.id };
+    if (search) {
+      query.title = { $regex: search, $options: 'i' };
+    }
+
+    let sortOption = { uploadDate: -1 };
+    if (sortBy === 'oldest') sortOption = { uploadDate: 1 };
+    if (sortBy === 'size_desc') sortOption = { size: -1 };
+    if (sortBy === 'size_asc') sortOption = { size: 1 };
+
+    const videos = await Video.find(query).sort(sortOption);
     res.json(videos);
   } catch (err) {
     res.status(500).json({ error: err.message });
