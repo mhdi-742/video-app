@@ -9,6 +9,7 @@ const videoSchema = new mongoose.Schema({
     enum: ['pending', 'processed', 'flagged', 'safe'], 
     default: 'pending' 
   },
+  size: { type: Number, required: true },
   sensitivity: { type: String, default: 'unchecked' },
   uploadDate: { type: Date, default: Date.now }
 });

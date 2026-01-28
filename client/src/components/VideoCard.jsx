@@ -1,6 +1,11 @@
 import { Play, FileVideo, Clock, ShieldAlert, ShieldCheck } from "lucide-react";
 
 const VideoCard = ({ video, onPlay }) => {
+  const formatSize = (bytes) => {
+    if (!bytes || isNaN(bytes)) return "0.00 MB";
+    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+  };
+
   // Determine Status Color
   const getStatusBadge = (status) => {
     switch (status) {
@@ -44,15 +49,19 @@ const VideoCard = ({ video, onPlay }) => {
 
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-bold text-white truncate pr-2">{video.title}</h3>
+          <h3
+            className="font-bold text-white truncate pr-2"
+            title={video.title}
+          >
+            {video.title}
+          </h3>
           {getStatusBadge(video.status)}
         </div>
-        <p className="text-gray-400 text-xs">
-          Uploaded: {new Date(video.uploadDate).toLocaleDateString()}
-        </p>
-        <p className="text-gray-500 text-xs mt-1">
-          Size: {(video.size / (1024 * 1024)).toFixed(2)} MB
-        </p>
+
+        <div className="flex justify-between items-center mt-2 text-xs text-gray-400">
+          <span>{new Date(video.uploadDate).toLocaleDateString()}</span>
+          <span>{formatSize(video.size)}</span>
+        </div>
       </div>
     </div>
   );
