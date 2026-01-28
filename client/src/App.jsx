@@ -8,13 +8,15 @@ import { AuthProvider, AuthContext } from "./context/AuthContext.jsx";
 import { useContext } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 
 const PrivateRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
   return user ? children : <Navigate to="/login" />;
 };
 
-const Dashboard = () => {
+{
+  /*const Dashboard = () => {
   const { user, logout } = useContext(AuthContext);
   return (
     <div className="min-h-screen bg-gray-900 text-white p-10">
@@ -32,7 +34,8 @@ const Dashboard = () => {
       </div>
     </div>
   );
-};
+};*/
+}
 
 function App() {
   return (
