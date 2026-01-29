@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Shield } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 import UploadModal from "../components/UploadModal";
 import VideoCard from "../components/VideoCard";
 import VideoPlayer from "../components/VideoPlayer";
@@ -18,7 +19,7 @@ const Dashboard = () => {
   const [filterSafe, setFilterSafe] = useState(false);
 
   useEffect(() => {
-    fetchVideos(); // Initial fetch
+    fetchVideos();
 
     const newSocket = io("http://localhost:5000");
     setSocket(newSocket);
@@ -35,6 +36,15 @@ const Dashboard = () => {
 
     return () => newSocket.close();
   }, []);
+
+  const handleDelete = async (videoId) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/videos/${videoId}`);
+      setVideos((prev) => prev.filter((v) => v._id !== videoId));
+    } catch (err) {
+      alert(err.response?.data?.error || "Failed to delete");
+    }
+  };
 
   const fetchVideos = async () => {
     try {
@@ -63,20 +73,37 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6 md:p-12">
-      <header className="flex justify-between items-center mb-8 border-b border-gray-700 pb-6">
+      <header className="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-gray-700 pb-6 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-blue-500">VideoVault</h1>
           <p className="text-gray-400 text-sm mt-1">
-            Welcome back, {user?.username}
+            Welcome back, {user?.username}{" "}
+            <span className="text-xs bg-gray-700 px-2 py-0.5 rounded uppercase ml-2">
+              {user?.role}
+            </span>
           </p>
         </div>
+
         <div className="flex gap-4">
-          <button
-            onClick={() => setShowUpload(true)}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-bold transition"
-          >
-            <Plus size={20} /> Upload Video
-          </button>
+          {user?.role !== "viewer" && (
+            <button
+              onClick={() => setShowUpload(true)}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-bold transition"
+            >
+              <Plus size={20} /> Upload Video
+            </button>
+          )}
+
+          {/* 2. SHOW ADMIN BUTTON FOR ADMINS */}
+          {user?.role === "admin" && (
+            <Link
+              to="/admin"
+              className="flex items-center gap-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-bold transition"
+            >
+              <Shield size={20} /> Admin Panel
+            </Link>
+          )}
+
           <button
             onClick={logout}
             className="text-gray-400 hover:text-white transition"
@@ -86,6 +113,7 @@ const Dashboard = () => {
         </div>
       </header>
 
+      {/* SEARCH AND FILTER BAR (No changes needed here) */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8 bg-gray-800 p-4 rounded-lg border border-gray-700">
         <div className="relative w-full md:w-1/3">
           <input
@@ -143,6 +171,8 @@ const Dashboard = () => {
                 key={video._id}
                 video={video}
                 onPlay={(vid) => setSelectedVideo(vid)}
+                onDelete={handleDelete}
+                currentUser={user}
               />
             ))}
         </div>

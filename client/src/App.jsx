@@ -9,6 +9,7 @@ import { useContext } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const PrivateRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
@@ -44,6 +45,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route
             path="/"
             element={

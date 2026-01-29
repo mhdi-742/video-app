@@ -5,6 +5,7 @@ const fs = require('fs');
 const Video = require('../models/Video');
 const verifyToken = require('../middleware/auth');
 const { analyzeVideo } = require('../utils/videoprocessor'); 
+const checkRole = require('../middleware/checkRole');
 const path = require('path');
 
 // Multer Config 
@@ -21,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // UPLOAD ROUTE
-router.post('/upload', verifyToken, upload.single('video'), async (req, res) => {
+router.post('/upload', verifyToken, checkRole(['editor', 'admin']), upload.single('video'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
@@ -59,22 +60,51 @@ router.post('/upload', verifyToken, upload.single('video'), async (req, res) => 
   }
 });
 
+
+router.delete('/:id', verifyToken, checkRole(['editor', 'admin']), async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.id);
+    if (!video) return res.status(404).json({ error: "Video not found" });
+
+    if (req.user.role !== 'admin' && video.uploader.toString() !== req.user.id) {
+      return res.status(403).json({ error: "You can only delete your own videos" });
+    }
+
+    const filePath = path.join(__dirname, '../uploads', video.filename);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    
+    await Video.findByIdAndDelete(req.params.id);
+    res.json({ message: "Video deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+
 router.get('/', verifyToken, async (req, res) => {
   try {
     const { search, sortBy } = req.query;
-
-    let query = { uploader: req.user.id };
-    if (search) {
-      query.title = { $regex: search, $options: 'i' };
+    let query = {};
+    if (req.user.role !== 'admin') {
+      query.uploader = req.user.id;
     }
 
-    let sortOption = { uploadDate: -1 };
+    if (search) {
+      query.title = { $regex: search, $options: 'i' }; 
+    }
+
+    let sortOption = { uploadDate: -1 }; 
     if (sortBy === 'oldest') sortOption = { uploadDate: 1 };
     if (sortBy === 'size_desc') sortOption = { size: -1 };
     if (sortBy === 'size_asc') sortOption = { size: 1 };
 
-    const videos = await Video.find(query).sort(sortOption);
+    const videos = await Video.find(query)
+      .populate('uploader', 'username') 
+      .sort(sortOption);
+
     res.json(videos);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

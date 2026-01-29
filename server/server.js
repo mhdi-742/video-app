@@ -6,6 +6,8 @@ const http = require('http');
 const { Server } = require('socket.io');
 const authRoutes = require('./routes/auth');
 const videoRoutes = require('./routes/video');
+const user=require('./routes/user');
+
 
 const app = express();
 const server = http.createServer(app); 
@@ -13,6 +15,7 @@ const server = http.createServer(app);
 // Middleware
 app.use(cors());
 app.use(express.json()); 
+app.use('/api/users', user);
 app.use('/api/auth', authRoutes);
 app.use('/api/videos', videoRoutes)
 
