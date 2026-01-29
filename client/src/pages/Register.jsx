@@ -13,7 +13,10 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/auth/register", formData);
+      await axios.post(
+        "https://video-app-production-d10a.up.railway.app//api/auth/register",
+        formData,
+      );
       alert("Registration Successful! Please Login.");
       navigate("/login");
     } catch (err) {

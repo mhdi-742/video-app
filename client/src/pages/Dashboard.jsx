@@ -21,7 +21,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchVideos();
 
-    const newSocket = io("http://localhost:5000");
+    const newSocket = io("https://video-app-production-d10a.up.railway.app/");
     setSocket(newSocket);
 
     newSocket.on("video_processed", (data) => {
@@ -39,7 +39,9 @@ const Dashboard = () => {
 
   const handleDelete = async (videoId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/videos/${videoId}`);
+      await axios.delete(
+        `https://video-app-production-d10a.up.railway.app//api/videos/${videoId}`,
+      );
       setVideos((prev) => prev.filter((v) => v._id !== videoId));
     } catch (err) {
       alert(err.response?.data?.error || "Failed to delete");
@@ -50,7 +52,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `http://localhost:5000/api/videos?search=${search}&sortBy=${sortBy}`,
+        `https://video-app-production-d10a.up.railway.app//api/videos?search=${search}&sortBy=${sortBy}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },

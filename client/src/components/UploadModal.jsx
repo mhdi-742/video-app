@@ -24,18 +24,22 @@ const UploadModal = ({ onClose, onUploadSuccess }) => {
       // Get token from storage for Authorization
       const token = localStorage.getItem("token");
 
-      await axios.post("http://localhost:5000/api/videos/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, // Sends User ID
+      await axios.post(
+        "https://video-app-production-d10a.up.railway.app//api/videos/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`, // Sends User ID
+          },
+          onUploadProgress: (progressEvent) => {
+            const percent = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total,
+            );
+            setProgress(percent);
+          },
         },
-        onUploadProgress: (progressEvent) => {
-          const percent = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total,
-          );
-          setProgress(percent);
-        },
-      });
+      );
 
       // Reset and Notify Parent
       setUploading(false);

@@ -12,7 +12,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        "https://video-app-production-d10a.up.railway.app//api/auth/login",
         formData,
       );
       login(res.data.token, res.data.user);

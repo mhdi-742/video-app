@@ -1,4 +1,7 @@
 client/node_modules/
 server/node_modules/
 server/uploads/
+cilent/.env
+server/.env
 .env
+server/.env

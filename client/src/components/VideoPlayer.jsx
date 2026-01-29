@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 
 const VideoPlayer = ({ video, onClose }) => {
-  const videoUrl = `http://localhost:5000/api/videos/stream/${video.filename}`;
+  const videoUrl = `https://video-app-production-d10a.up.railway.app//api/videos/stream/${video.filename}`;
 
   return (
     <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50">

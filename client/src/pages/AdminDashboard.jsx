@@ -19,22 +19,28 @@ const AdminDashboard = () => {
   }, [activeTab]);
 
   const fetchUsers = async () => {
-    const res = await axios.get("http://localhost:5000/api/users", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await axios.get(
+      "https://video-app-production-d10a.up.railway.app//api/users",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
     setUsers(res.data);
   };
 
   const fetchVideos = async () => {
-    const res = await axios.get("http://localhost:5000/api/videos", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await axios.get(
+      "https://video-app-production-d10a.up.railway.app//api/videos",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
     setVideos(res.data);
   };
 
   const changeRole = async (id, newRole) => {
     await axios.patch(
-      `http://localhost:5000/api/users/${id}/role`,
+      `https://video-app-production-d10a.up.railway.app//api/users/${id}/role`,
       {
         headers: { Authorization: `Bearer ${token}` },
       },
@@ -47,9 +53,12 @@ const AdminDashboard = () => {
 
   const deleteVideo = async (id) => {
     if (!window.confirm("Admin Delete: Are you sure?")) return;
-    await axios.delete(`http://localhost:5000/api/videos/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    await axios.delete(
+      `https://video-app-production-d10a.up.railway.app//api/videos/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
     setVideos(videos.filter((v) => v._id !== id));
   };
 
