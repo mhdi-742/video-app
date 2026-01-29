@@ -21,7 +21,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchVideos();
 
-    const newSocket = io("https://video-app-production-d10a.up.railway.app/");
+    const newSocket = io("https://video-app-production-d10a.up.railway.app");
     setSocket(newSocket);
 
     newSocket.on("video_processed", (data) => {
@@ -40,7 +40,7 @@ const Dashboard = () => {
   const handleDelete = async (videoId) => {
     try {
       await axios.delete(
-        `https://video-app-production-d10a.up.railway.app//api/videos/${videoId}`,
+        `https://video-app-production-d10a.up.railway.app/api/videos/${videoId}`,
       );
       setVideos((prev) => prev.filter((v) => v._id !== videoId));
     } catch (err) {
@@ -52,7 +52,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `https://video-app-production-d10a.up.railway.app//api/videos?search=${search}&sortBy=${sortBy}`,
+        `https://video-app-production-d10a.up.railway.app/api/videos?search=${search}&sortBy=${sortBy}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },

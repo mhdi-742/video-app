@@ -14,7 +14,7 @@ const Register = () => {
     e.preventDefault();
     try {
       await axios.post(
-        "https://video-app-production-d10a.up.railway.app//api/auth/register",
+        "https://video-app-production-d10a.up.railway.app/api/auth/register",
         formData,
       );
       alert("Registration Successful! Please Login.");

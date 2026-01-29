@@ -25,7 +25,7 @@ const UploadModal = ({ onClose, onUploadSuccess }) => {
       const token = localStorage.getItem("token");
 
       await axios.post(
-        "https://video-app-production-d10a.up.railway.app//api/videos/upload",
+        "https://video-app-production-d10a.up.railway.app/api/videos/upload",
         formData,
         {
           headers: {

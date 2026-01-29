@@ -20,7 +20,7 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     const res = await axios.get(
-      "https://video-app-production-d10a.up.railway.app//api/users",
+      "https://video-app-production-d10a.up.railway.app/api/users",
       {
         headers: { Authorization: `Bearer ${token}` },
       },
@@ -30,7 +30,7 @@ const AdminDashboard = () => {
 
   const fetchVideos = async () => {
     const res = await axios.get(
-      "https://video-app-production-d10a.up.railway.app//api/videos",
+      "https://video-app-production-d10a.up.railway.app/api/videos",
       {
         headers: { Authorization: `Bearer ${token}` },
       },
@@ -40,7 +40,7 @@ const AdminDashboard = () => {
 
   const changeRole = async (id, newRole) => {
     await axios.patch(
-      `https://video-app-production-d10a.up.railway.app//api/users/${id}/role`,
+      `https://video-app-production-d10a.up.railway.app/api/users/${id}/role`,
       {
         headers: { Authorization: `Bearer ${token}` },
       },
@@ -54,7 +54,7 @@ const AdminDashboard = () => {
   const deleteVideo = async (id) => {
     if (!window.confirm("Admin Delete: Are you sure?")) return;
     await axios.delete(
-      `https://video-app-production-d10a.up.railway.app//api/videos/${id}`,
+      `https://video-app-production-d10a.up.railway.app/api/videos/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       },
