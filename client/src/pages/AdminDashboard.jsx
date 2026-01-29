@@ -3,18 +3,18 @@ import axios from "axios";
 import { Users, Video, Trash2, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const { user, logout } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("users");
   const [users, setUsers] = useState([]);
   const [videos, setVideos] = useState([]);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (activeTab === "users") fetchUsers();
+    if (activeTab === "users" && user?.role === "admin") fetchUsers();
     else fetchVideos();
   }, [activeTab]);
 
@@ -54,9 +54,7 @@ const AdminDashboard = () => {
   };
 
   if (user?.role !== "admin") {
-    alert("Access Denied: Admins Only");
-    navigate("/");
-    return <></>;
+    return <Navigate to="/" replace />;
   } else {
     return (
       <div className="min-h-screen bg-gray-900 text-white p-8">
